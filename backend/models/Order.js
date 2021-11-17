@@ -2,12 +2,12 @@
 import { Sequelize } from "sequelize";
 // import connection
 import db from "../config/database.js";
-import Transaction from "./Transaction.js";
+// import Transaction from "./Transaction.js";
+
 // init DataTypes
 const { DataTypes } = Sequelize;
-
 // Define schema
-const Item = db.define('Items', {
+const Order = db.define('Orders', {
   // Define attributes
   id:{
     type: Sequelize.UUID,
@@ -15,19 +15,21 @@ const Item = db.define('Items', {
     allowNull: false,
     primaryKey: true
   },
-  item_name: {
+  order_cust_name: {
     type: DataTypes.STRING,
-    allowNull : false,
+    allowNull : true,
   },
-  item_price: {
+  order_total_price: {
     type: DataTypes.DOUBLE,
-    allowNull : false,
+    allowNull : true
   },
-  item_picture: {
-    type: DataTypes.STRING
+  order_date: {
+    type: DataTypes.DATE,
+    allowNull : true
   },
-  item_stock: {
-    type: DataTypes.INTEGER
+  order_description : {
+    type: DataTypes.STRING,
+    allowNull: true
   },
   createdAt: {
     allowNull: false,
@@ -41,10 +43,15 @@ const Item = db.define('Items', {
   // Freeze Table Name
   freezeTableName: true
 });
-Item.hasMany(Transaction, {
-  foreignKey:'item_id',
-});
+// Order.hasMany(Transaction, {
+//   foreignKey: 'order_id',
+// });
+Order.associate = models => {
+  Order.hasMany(models.Transaction, {
+    foreignKey: 'order_id',
+  })
+}
 
 
 // Export model Item
-export default Item;
+export default Order;
